@@ -9,7 +9,7 @@ app = FastAPI(title="Agentic EDI Backend")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], # Update with your specific Vercel URL later for tighter security
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
