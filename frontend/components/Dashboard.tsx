@@ -72,3 +72,13 @@ export default function Dashboard() {
     </div>
   );
 }
+useEffect(() => {
+    // Talk to the Python engine directly
+    fetch('/engine/metrics')
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
+      .then(data => setMetrics(data))
+      .catch(err => console.error("Backend offline or unreachable:", err));
+  }, []);
