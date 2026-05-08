@@ -11,6 +11,6 @@
     "next": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "lucide-react": "^0.263.1"
+    "lucide-react": "latest"
   }
 }
