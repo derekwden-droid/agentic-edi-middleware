@@ -61,3 +61,36 @@ def get_metrics():
         "self_healed_connections": 14,
         "pipeline_uptime": "99.99%"
     }
+from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+app = FastAPI(title="Agentic EDI Backend")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"], 
+    allow_credentials=False, 
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Change the prefix to /engine
+api_router = APIRouter(prefix="/engine")
+
+@api_router.get("/health")
+def health_check():
+    return {"status": "operational", "active_agents": 12}
+
+# Catch both with and without the trailing slash for safety
+@api_router.get("/metrics/")
+@api_router.get("/metrics")
+def get_metrics():
+    return {
+        "documents_translated": 8432,
+        "active_negotiation_agents": 12,
+        "self_healed_connections": 14,
+        "pipeline_uptime": "99.99%"
+    }
+
+app.include_router(api_router)
