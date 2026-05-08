@@ -10,11 +10,14 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    // Communication with FastAPI backend
-    fetch('http://127.0.0.1:8000/api/metrics')
-      .then(res => res.json())
+    // Communication with FastAPI backend via Vercel relative routing
+    fetch('/_/backend/api/metrics')
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+        return res.json();
+      })
       .then(data => setMetrics(data))
-      .catch(err => console.error("Backend offline", err));
+      .catch(err => console.error("Backend offline or unreachable:", err));
   }, []);
 
   return (
