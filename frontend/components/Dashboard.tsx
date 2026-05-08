@@ -1,27 +1,36 @@
 'use client';
 import { useEffect, useState } from 'react';
 
+// 1. We tell TypeScript exactly what shape our data will take
+interface MetricsData {
+  documents_translated: number;
+  active_negotiation_agents: number;
+  self_healed_connections: number;
+  pipeline_uptime: string;
+}
+
 export default function Dashboard() {
-  const [metrics, setMetrics] = useState({ 
+  // 2. We initialize the state with our TypeScript interface
+  const [metrics, setMetrics] = useState<MetricsData>({ 
     documents_translated: 0, 
     active_negotiation_agents: 0,
     self_healed_connections: 0,
     pipeline_uptime: "0%"
   });
 
+  // 3. The hook stays safely INSIDE the component
   useEffect(() => {
-    // Communication with FastAPI backend via Vercel relative routing
-    fetch('/_/backend/api/metrics')
+    fetch('/engine/metrics')
       .then(res => {
         if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
         return res.json();
       })
-      .then(data => setMetrics(data))
+      .then((data: MetricsData) => setMetrics(data))
       .catch(err => console.error("Backend offline or unreachable:", err));
   }, []);
 
   return (
-    <div className="max-w-5xl mx-auto">
+    <div className="max-w-5xl mx-auto font-sans">
       <header className="mb-10">
         <h1 className="text-4xl font-bold tracking-tight text-emerald-400">Agentic EDI Orchestrator</h1>
         <p className="text-slate-400 mt-2">Dynamic Workload Routing & B2B Middleware</p>
@@ -51,7 +60,7 @@ export default function Dashboard() {
       </div>
       
       <div className="mt-10 bg-slate-900 rounded-xl border border-slate-800 p-6 shadow-lg">
-        <h3 className="text-lg font-medium mb-4">Live Agent Activity</h3>
+        <h3 className="text-lg font-medium mb-4 text-white">Live Agent Activity</h3>
         <div className="space-y-4">
           <div className="flex items-center justify-between p-4 bg-slate-800/50 rounded-lg">
             <div>
@@ -72,13 +81,3 @@ export default function Dashboard() {
     </div>
   );
 }
-useEffect(() => {
-    // Talk to the Python engine directly
-    fetch('/engine/metrics')
-      .then(res => {
-        if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-        return res.json();
-      })
-      .then(data => setMetrics(data))
-      .catch(err => console.error("Backend offline or unreachable:", err));
-  }, []);
