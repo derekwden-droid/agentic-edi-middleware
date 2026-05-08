@@ -11,7 +11,7 @@
   ],
   "rewrites": [
     {
-      "source": "/_/backend/(.*)",
+      "source": "/engine/(.*)",
       "destination": "/backend/main.py"
     }
   ]
